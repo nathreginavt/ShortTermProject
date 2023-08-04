@@ -29,10 +29,11 @@ kidsCalc = do
     putStrLn "Write the second value: "
     y <- readLn :: IO Int
     putStrLn "Select the option you want: "
-    putStrLn "1- Addition"
-    putStrLn "2- Subtraction"
-    putStrLn "3- Multiplication"
-    putStrLn "4- Division"
+    putStrLn ("1- Addition       (" ++ show x ++ "+" ++ show y ++ ")")
+    putStrLn ("2- Subtraction    (" ++ show x ++ "-" ++ show y ++ ")")
+    putStrLn ("3- Multiplication (" ++ show x ++ "x" ++ show y ++ ")")
+    putStrLn ("4- Division       (" ++ show x ++ "/" ++ show y ++ ")")
+    putStrLn ("5- Exponentiation (" ++ show x ++ "^" ++ show y ++ ")")
     op <- readLn :: IO Int
     let expression = case op of
                         1 -> Add (Const x) (Const y)
