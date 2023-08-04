@@ -1,14 +1,15 @@
 module Calc where
 
--- DSL
+-- DSLs
 data Expr = Const Int
           | Add Expr Expr
           | Sub Expr Expr
           | Mul Expr Expr
           | Div Expr Expr
           | Exp Expr Expr
+          | LinearEquation Double Double deriving (Show)
 
--- Function to calculate
+-- Functions to solve the expressions
 calc :: Expr -> Int
 calc (Const x)   = x
 calc (Add e1 e2) = calc e1 + calc e2
@@ -17,6 +18,9 @@ calc (Mul e1 e2) = calc e1 * calc e2
 calc (Div e1 e2) = calc e1 `div` calc e2
 calc (Exp e1 e2) = calc e1 ^ calc e2
 _ = error
+
+solveEquation :: Expr -> Double
+solveEquation (LinearEquation a b) = -b / a
 
 --Kids Calculator
 kidsCalc :: IO()
@@ -64,3 +68,14 @@ expression3 = (Const 3 `Add` Const 2) `Mul` ((Const 4 `Sub` Const 1) `Exp` Const
 expression4 :: Expr
 expression4 = Mul (Sub (Const 0) (Add (Const 3) (Const 5))) (Sub (Const 0) (Const 2))
 
+-- 2x + 3 = 0
+equation1 :: Expr
+equation1 = LinearEquation 2 3
+
+-- 3x - 5 = 0
+equation2 :: Expr
+equation2 = LinearEquation 3 (-5)
+
+-- -4x + 10 = 0
+equation3 :: Expr
+equation3 = LinearEquation (-4) 10
