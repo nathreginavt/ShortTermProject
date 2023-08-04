@@ -6,26 +6,31 @@ data Expr = Const Int
           | Sub Expr Expr
           | Mul Expr Expr
           | Div Expr Expr
+          | Exp Expr Expr
 
 -- Function to calculate
-eval :: Expr -> Int
-eval (Const x)   = x
-eval (Add e1 e2) = eval e1 + eval e2
-eval (Sub e1 e2) = eval e1 - eval e2
-eval (Mul e1 e2) = eval e1 * eval e2
-eval (Div e1 e2) = eval e1 `div` eval e2
+calc :: Expr -> Int
+calc (Const x)   = x
+calc (Add e1 e2) = calc e1 + calc e2
+calc (Sub e1 e2) = calc e1 - calc e2
+calc (Mul e1 e2) = calc e1 * calc e2
+calc (Div e1 e2) = calc e1 `div` calc e2
+calc (Exp e1 e2) = calc e1 ^ calc e2
+_ = error
 
--- 
-calc :: IO()
-calc = do
+--Kids Calculator
+kidsCalc :: IO()
+kidsCalc = do
+    putStrLn ""
     putStrLn "Welcome to KidsCalculator! "
+    putStrLn ""
     putStrLn "Write the first value: "
     x <- readLn :: IO Int
     putStrLn "Write the second value: "
     y <- readLn :: IO Int
     putStrLn "Select the option you want: "
     putStrLn "1- Addition"
-    putStrLn "2- Subtration"
+    putStrLn "2- Subtraction"
     putStrLn "3- Multiplication"
     putStrLn "4- Division"
     op <- readLn :: IO Int
@@ -34,36 +39,27 @@ calc = do
                         2 -> Sub (Const x) (Const y)
                         3 -> Mul (Const x) (Const y)
                         4 -> Div (Const x) (Const y)
+                        5 -> Exp (Const x) (Const y)
                         _ -> error "Invalid option"
-    let result = eval expression
+    let result = calc expression
     putStrLn ("Result: " ++ show result)
         
 
-{--*
+--Math expressions:
 
 --1+2
-expressao1 :: Expr
-expressao1 = Const 1 `Add` Const 2
+expression1 :: Expr
+expression1 = Const 1 `Add` Const 2
 
 --2² - 5 x 2 + 6
-expressao2 :: Expr
-expressao2 = (Const 2 `Mul` Const 2) `Sub` (Const 5 `Mul` Const 2) `Add` Const 6
+expression2 :: Expr
+expression2 = Const 2 `Exp` Const 2 `Sub` (Const 5 `Mul` Const 2) `Add` Const 6
 
--- Função para criar expressões de forma mais conveniente
-infixl 6 <+>
-(<+>) :: Expr -> Expr -> Expr
-(<+>) = Add
+-- (3 + 2) x (4 - 1)²
+expression3 :: Expr
+expression3 = (Const 3 `Add` Const 2) `Mul` ((Const 4 `Sub` Const 1) `Exp` Const 2)
 
-infixl 6 <->
-(<->) :: Expr -> Expr -> Expr
-(<->) = Sub
+-- -(3 + 5) x -2
+expression4 :: Expr
+expression4 = Mul (Sub (Const 0) (Add (Const 3) (Const 5))) (Sub (Const 0) (Const 2))
 
-infixl 7 <*>
-(<*>) :: Expr -> Expr -> Expr
-(<*>) = Mul
-
-infixl 7 </>
-(</>) :: Expr -> Expr -> Expr
-(</>) = Div
-
-*--}
